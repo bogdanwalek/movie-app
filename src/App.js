@@ -1,10 +1,25 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MovieListHeading from './components/MovieListHeading';
 import MovieList from './components/MovieList';
 
 function App() {
+
+  const [searchValue, setSearchValue] = useState('');
+  const [movies2, setMovies] = useState([]);
+  const [favourites, setFavourites] = useState([]);
+  
+  const getMovieRequest = async (searchValue) => {
+
+    const url = `http://www.omdbapi.com/?s=${searchValue}&apikey=aeb2b829`;
+    const movieResponse = await fetch(url);
+    const movieResponseJson = await movieResponse.json();
+
+    if(movieResponseJson.Search) {
+      setMovies(movieResponseJson.Search);
+    }
+  };
 
   const movies = [
     {
@@ -53,11 +68,11 @@ function App() {
 
 
   return (
-    <div className="container-fluid movie-app">
-      <div className="row d-flex align-items-center mt-4 mb-4">
+    <div className="container overflow-hidden">
+      <div className="row mt-4 mb-4">
         <MovieListHeading heading="Seznam filmů"></MovieListHeading>
       </div>
-      <div className="row">
+      <div className="row row-cols-3 g-2">
         <MovieList movies={movies}></MovieList>
       </div>
     </div>
